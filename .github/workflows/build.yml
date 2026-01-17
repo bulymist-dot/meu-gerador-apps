@@ -1,0 +1,31 @@
+name: Gerar APK
+on: [push, workflow_dispatch]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Criando Projeto
+        run: |
+          npm install @capacitor/core @capacitor/cli @capacitor/android
+          mkdir -p www
+          echo '<!DOCTYPE html><html><body style="background:black;color:white;text-align:center;"><h1>App Pronto!</h1></body></html>' > www/index.html
+          npx cap init "Meu App" "com.meu.app" --web-dir www
+          npx cap add android
+
+      - name: Fabricando APK
+        run: |
+          npx cap copy
+          cd android
+          chmod +x gradlew
+          ./gradlew assembleDebug
+
+      - name: Download
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-final
+          path: android/app/build/outputs/apk/debug/app-debug.apk
