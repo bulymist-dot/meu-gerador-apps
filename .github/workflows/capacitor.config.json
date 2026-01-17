@@ -1,0 +1,8 @@
+{
+  "appId": "com.meu.app",
+  "appName": "App Gerado",
+  "webDir": "www",
+  "server": {
+    "cleartext": true
+  }
+}
